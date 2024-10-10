@@ -82,7 +82,7 @@ def load_from_raw(
     video: bool,
     episodes: list[int] | None = None,
     encoding: dict | None = None,
-    compressed_images: bool,
+    compressed_images: bool = True,
 ):
 
     hdf5_files = sorted(raw_dir.glob("episode_*.hdf5"))
@@ -138,9 +138,7 @@ def load_from_raw(
                     shutil.rmtree(tmp_imgs_dir)
 
                     # store the reference to the video frame
-                    ep_dict[img_key] = [
-                        {"path": f"videos/{fname}", "timestamp": i / fps} for i in range(num_frames)
-                    ]
+                    ep_dict[img_key] = [{"path": f"videos/{fname}", "timestamp": i / fps} for i in range(num_frames)]
                 else:
                     ep_dict[img_key] = [PILImage.fromarray(x) for x in imgs_array]
 
@@ -189,9 +187,7 @@ def to_hf_dataset(data_dict, video) -> Dataset:
         features["observation.effort"] = Sequence(
             length=data_dict["observation.effort"].shape[1], feature=Value(dtype="float32", id=None)
         )
-    features["action"] = Sequence(
-        length=data_dict["action"].shape[1], feature=Value(dtype="float32", id=None)
-    )
+    features["action"] = Sequence(length=data_dict["action"].shape[1], feature=Value(dtype="float32", id=None))
     features["episode_index"] = Value(dtype="int64", id=None)
     features["frame_index"] = Value(dtype="int64", id=None)
     features["timestamp"] = Value(dtype="float32", id=None)
@@ -210,6 +206,7 @@ def from_raw_to_lerobot_format(
     video: bool = True,
     episodes: list[int] | None = None,
     encoding: dict | None = None,
+    compressed_images: bool = True,
 ):
     # sanity check
     check_format(raw_dir, compressed_images)

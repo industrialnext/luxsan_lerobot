@@ -82,9 +82,7 @@ def get_from_raw_to_lerobot_format_fn(raw_format: str):
     return from_raw_to_lerobot_format
 
 
-def save_meta_data(
-    info: dict[str, Any], stats: dict, episode_data_index: dict[str, list], meta_data_dir: Path
-):
+def save_meta_data(info: dict[str, Any], stats: dict, episode_data_index: dict[str, list], meta_data_dir: Path):
     meta_data_dir.mkdir(parents=True, exist_ok=True)
 
     # save info
@@ -116,9 +114,7 @@ def push_meta_data_to_hub(repo_id: str, meta_data_dir: str | Path, revision: str
     )
 
 
-def push_dataset_card_to_hub(
-    repo_id: str, revision: str | None, tags: list | None = None, text: str | None = None
-):
+def push_dataset_card_to_hub(repo_id: str, revision: str | None, tags: list | None = None, text: str | None = None):
     """Creates and pushes a LeRobotDataset Card with appropriate tags to easily find it on the hub."""
     card = create_lerobot_dataset_card(tags=tags, text=text)
     card.push_to_hub(repo_id=repo_id, repo_type="dataset", revision=revision)
@@ -155,7 +151,7 @@ def push_dataset_to_hub(
     cache_dir: Path = Path("/tmp"),
     tests_data_dir: Path | None = None,
     encoding: dict | None = None,
-    compressed_images: bool = True
+    compressed_images: bool = True,
 ):
     check_repo_id(repo_id)
     user_id, dataset_id = repo_id.split("/")
@@ -208,7 +204,7 @@ def push_dataset_to_hub(
         "video": video,
         "episodes": episodes,
         "encoding": encoding,
-        "compressed_images": compressed_images
+        "compressed_images": compressed_images,
     }
 
     if "openx_rlds." in raw_format:
@@ -341,7 +337,7 @@ def main():
         "--compressed_images",
         type=int,
         default=1,
-        help="When set to 1, use compressed image with channel 2.",
+        help="When set to 1, use compressed image with channel 2, otherwise use channel 4.",
     )
     parser.add_argument(
         "--force-override",
